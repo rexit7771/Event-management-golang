@@ -9,4 +9,5 @@ import (
 
 func UserRoutes(router *gin.Engine, db *gorm.DB) {
 	router.POST("/register", controllers.AddNewUser)
+	router.POST("/login", controllers.Login)
 }
