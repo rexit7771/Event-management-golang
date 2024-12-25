@@ -56,10 +56,8 @@ func Login(c *gin.Context) {
 	}
 
 	var userDb structs.User
-	fmt.Println(user.Email)
 	tx := database.DB.Where("email = ?", user.Email).First(&userDb)
 	if tx.Error != nil {
-		fmt.Println("Email", user.Email, "Ngga ke cek")
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid Email / Password"})
 		return
 	}
@@ -73,10 +71,75 @@ func Login(c *gin.Context) {
 
 	token, tokenError := helpers.SignPayload(userDb)
 	if tokenError != nil {
-		fmt.Println(tokenError)
-		c.JSON(http.StatusInternalServerError, "Internal Server Error")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": tokenError.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"access_token": token})
+}
+
+func GetAllUser(c *gin.Context) {
+	var users []structs.User
+	database.DB.Table("users").Select("id, name, email, role, created_at, updated_at").Find(&users)
+	c.JSON(http.StatusOK, gin.H{"result": users})
+}
+
+func GetUserById(c *gin.Context) {
+	idParam := c.Param("id")
+	var userDB structs.User
+	if err := database.DB.First(&userDB, idParam).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": "User is not found", "error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"result": userDB})
+}
+
+func UpdateUserById(c *gin.Context) {
+	idParam := c.Param("id")
+	var userDB structs.User
+	database.DB.First(&userDB, idParam)
+	if userDB.ID == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"message": "User is not found"})
+		return
+	}
+
+	var userUpdate structs.User
+	if err := c.ShouldBind(&userUpdate); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
+		return
+	}
+
+	if userUpdate.Password != "" {
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userUpdate.Password), bcrypt.MinCost)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"result": err})
+			return
+		}
+		userUpdate.Password = string(hashedPassword)
+	} else {
+		userUpdate.Password = userDB.Password
+	}
+
+	if err := database.DB.Model(&userDB).Updates(userUpdate).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "User has been updated"})
+}
+
+func DeleteUserById(c *gin.Context) {
+	idParam := c.Param("id")
+	var userDB structs.User
+
+	if err := database.DB.First(&userDB, idParam).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": "User is not found"})
+		return
+	}
+
+	if err := database.DB.Unscoped().Delete(&userDB).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "User has been deleted"})
 }

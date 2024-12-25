@@ -1,0 +1,28 @@
+TODO
+## USER
+1. Fitur Get All User
+2. Fitur Update User By Id
+3. Fitur Delete User By Id
+
+## Event
+1. Fitur Get All Event
+2. Fitur Insert Event 
+3. Fitur Get Event By Id
+4. Fitur Update Event By Id
+5. Fitur Delete Event By Id
+
+## Ticket
+1. Fitur Get All Ticket (admin)
+2. Fitur Get All Ticket by Member Id 
+3. Fitur Get Ticket By Id
+4. Fitur Insert Ticket 
+5. Fitur Update Ticket By Id (admin)
+6. Fitur Delete Ticket By Id
+
+## Booking
+1. Fitur Get All Booking (admin)
+2. Fitur Get All Booking by Member Id 
+3. Fitur Insert Event 
+4. Fitur Get Event By Id
+5. Fitur Update Event By Id (Admin / Owner)
+6. Fitur Delete Event By Id
