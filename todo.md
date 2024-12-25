@@ -1,10 +1,7 @@
 TODO
-## USER
-1. Fitur Get All User
-2. Fitur Update User By Id
-3. Fitur Delete User By Id
 
 ## Event
+### Authentication
 1. Fitur Get All Event
 2. Fitur Insert Event 
 3. Fitur Get Event By Id
@@ -12,6 +9,7 @@ TODO
 5. Fitur Delete Event By Id
 
 ## Ticket
+### Authentication
 1. Fitur Get All Ticket (admin)
 2. Fitur Get All Ticket by Member Id 
 3. Fitur Get Ticket By Id
@@ -20,6 +18,7 @@ TODO
 6. Fitur Delete Ticket By Id
 
 ## Booking
+### Authentication
 1. Fitur Get All Booking (admin)
 2. Fitur Get All Booking by Member Id 
 3. Fitur Insert Event 

@@ -12,7 +12,9 @@ import (
 func main() {
 	database.Connect()
 	database.DB.AutoMigrate(&structs.User{})
+	database.DB.AutoMigrate(&structs.Event{})
 	// seeders.SeedUsers()
+	// seeders.SeedEvents()
 
 	router := gin.Default()
 	routes.UserRoutes(router, database.DB)
