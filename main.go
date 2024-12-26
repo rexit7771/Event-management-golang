@@ -3,7 +3,6 @@ package main
 import (
 	"event-management/database"
 	"event-management/routes"
-	"event-management/seeders"
 	"event-management/structs"
 	"os"
 
@@ -18,10 +17,11 @@ func main() {
 
 	// seeders.SeedUsers()
 	// seeders.SeedEvents()
-	seeders.SeedTickets()
+	// seeders.SeedTickets()
 
 	router := gin.Default()
 	routes.UserRoutes(router, database.DB)
 	routes.EventRoutes(router, database.DB)
+	routes.TicketRoutes(router, database.DB)
 	router.Run(":" + os.Getenv("PORT"))
 }

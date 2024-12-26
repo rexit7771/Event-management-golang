@@ -10,7 +10,7 @@ import (
 
 func GetAllEvents(c *gin.Context) {
 	var events []structs.Event
-	database.DB.Table("events").Preload("users").Find(&events)
+	database.DB.Table("events").Preload("User").Find(&events)
 	c.JSON(http.StatusOK, gin.H{
 		"result": events,
 	})
@@ -18,7 +18,7 @@ func GetAllEvents(c *gin.Context) {
 
 func GetAllApprovedEvents(c *gin.Context) {
 	var events []structs.Event
-	database.DB.Where("approved = ?", true).Preload("users").Find(&events)
+	database.DB.Where("approved = ?", true).Preload("User").Find(&events)
 	c.JSON(http.StatusOK, gin.H{
 		"result": events,
 	})
@@ -120,7 +120,5 @@ func DeleteEvent(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Event has been deleted",
-	})
+	c.JSON(http.StatusOK, gin.H{"message": "Event has been deleted"})
 }
