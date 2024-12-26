@@ -1,13 +1,5 @@
 TODO
 
-## Event
-### Authentication
-1. Fitur Get All Event
-2. Fitur Insert Event 
-3. Fitur Get Event By Id
-4. Fitur Update Event By Id
-5. Fitur Delete Event By Id
-
 ## Ticket
 ### Authentication
 1. Fitur Get All Ticket (admin)

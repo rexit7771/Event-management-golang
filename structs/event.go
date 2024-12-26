@@ -13,6 +13,8 @@ type Event struct {
 	Description string `json:"description" gorm:"not null"`
 	Date        string `json:"date" gorm:"type:date" validate:"required,date_after_today"`
 	Location    string `json:"location" gorm:"not null"`
+	Image_url   string `json:"image_url"`
+	Approved    bool   `json:"approved" gorm:"default:0"`
 	Created_by  uint   `json:"created_by" gorm:"not null"`
 	User        User   `gorm:"foreignKey:Created_by;references:ID"`
 }

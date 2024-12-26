@@ -11,10 +11,14 @@ import (
 func UserRoutes(router *gin.Engine, db *gorm.DB) {
 	router.POST("/register", controllers.AddNewUser)
 	router.POST("/login", controllers.Login)
-	router.Use(middlewares.Auth())
-	router.GET("/users", middlewares.IsAdmin(), controllers.GetAllUser)
-	router.Use(middlewares.IsAccountOwner())
-	router.GET("/users/:id", controllers.GetUserById)
-	router.PUT("/users/:id", controllers.UpdateUserById)
-	router.DELETE("/users/:id", controllers.DeleteUserById)
+	userGroup := router.Group("/users")
+	{
+		userGroup.Use(middlewares.Auth())
+		userGroup.GET("/", middlewares.IsAdmin(), controllers.GetAllUser)
+		userGroup.Use(middlewares.IsAccountOwner())
+		userGroup.GET("/:id", controllers.GetUserById)
+		userGroup.PUT("/:id", controllers.UpdateUserById)
+		userGroup.DELETE("/:id", controllers.DeleteUserById)
+	}
+
 }
