@@ -83,7 +83,7 @@ func UpdateEvent(c *gin.Context) {
 func UpdateApproval(c *gin.Context) {
 	eventId := c.Param("id")
 	var event structs.Event
-	database.DB.Table("events").Preload("users").First(&event, eventId)
+	database.DB.Table("events").Preload("User").First(&event, eventId)
 	if event.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Event is not found"})
 		return

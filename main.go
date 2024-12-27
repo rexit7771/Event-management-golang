@@ -14,6 +14,7 @@ func main() {
 	database.DB.AutoMigrate(&structs.User{})
 	database.DB.AutoMigrate(&structs.Event{})
 	database.DB.AutoMigrate(&structs.Ticket{})
+	database.DB.AutoMigrate(&structs.Booking{})
 
 	// seeders.SeedUsers()
 	// seeders.SeedEvents()
@@ -23,5 +24,6 @@ func main() {
 	routes.UserRoutes(router, database.DB)
 	routes.EventRoutes(router, database.DB)
 	routes.TicketRoutes(router, database.DB)
+	routes.BookingRoutes(router, database.DB)
 	router.Run(":" + os.Getenv("PORT"))
 }

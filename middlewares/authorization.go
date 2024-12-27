@@ -4,6 +4,7 @@ import (
 	"event-management/database"
 	"event-management/structs"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,22 +12,30 @@ import (
 func IsAccountOwner() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idParam := c.Param("id")
+		idUint64, err := strconv.ParseUint(idParam, 10, 32)
+		if err != nil {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"message": "Invalid ID parameter"})
+			return
+		}
+		idUint := uint(idUint64)
+
 		userID, exists := c.Get("userID")
 		if !exists {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "User ID is not found"})
 			return
 		}
+		userIdUint := userID.(uint)
 
 		role, exists := c.Get("role")
 		if !exists {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "User Role is not found"})
 			return
 		}
-
 		roleStr := role.(string)
+
 		if roleStr == "admin" {
 			c.Next()
-		} else if idParam == userID {
+		} else if idUint == userIdUint {
 			c.Next()
 		} else {
 			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{
@@ -142,17 +151,53 @@ func IsEventTicketOwnerByParam() gin.HandlerFunc {
 	}
 }
 
+func IsBookingTicketOwner() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		bookingID := c.Param("id")
+		var booking structs.Booking
+		database.DB.Table("bookings").First(&booking, bookingID)
+		if booking.ID == 0 {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "Booking Ticket is not found"})
+			return
+		}
+
+		userID, exists := c.Get("userID")
+		if !exists {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized, User ID is not found, You have to login first"})
+			return
+		}
+		userIDUint := userID.(uint)
+
+		role, exists := c.Get("role")
+		if !exists {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized, User Role is not found, You have to login first"})
+			return
+		}
+
+		roleStr := role.(string)
+
+		if roleStr == "admin" {
+			c.Next()
+		} else if userIDUint != booking.User_id {
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "Forbidden, You are not the owner of this Booking Ticket"})
+			return
+		}
+
+		c.Next()
+	}
+}
+
 func IsAdmin() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		_, exists := c.Get("userID")
 		if !exists {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "User ID is not found"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized, User ID is not found, You have to login first"})
 			return
 		}
 
 		role, exists := c.Get("role")
 		if !exists {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "User Role is not found"})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized, User Role is not found, You have to login first"})
 			return
 		}
 

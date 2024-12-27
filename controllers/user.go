@@ -16,24 +16,24 @@ var err error
 func AddNewUser(c *gin.Context) {
 	var newUser structs.User
 	if err := c.ShouldBindJSON(&newUser); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
 
 	if err := newUser.Validate(); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Password must contain 5 - 10 characters"})
 		return
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(newUser.Password), bcrypt.MinCost)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
 		return
 	}
 	newUser.Password = string(hashedPassword)
 
 	if err := database.DB.Create(&newUser).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "Email has been used", "error": err.Error()})
 		return
 	}
 
@@ -71,7 +71,7 @@ func Login(c *gin.Context) {
 
 	token, tokenError := helpers.SignPayload(userDb)
 	if tokenError != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": tokenError.Error()})
+		c.JSON(http.StatusInternalServerError, gin.H{"message": tokenError.Error()})
 		return
 	}
 
