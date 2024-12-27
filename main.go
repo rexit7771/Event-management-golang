@@ -3,6 +3,7 @@ package main
 import (
 	"event-management/database"
 	"event-management/routes"
+	"event-management/seeders"
 	"event-management/structs"
 	"os"
 
@@ -16,9 +17,9 @@ func main() {
 	database.DB.AutoMigrate(&structs.Ticket{})
 	database.DB.AutoMigrate(&structs.Booking{})
 
-	// seeders.SeedUsers()
-	// seeders.SeedEvents()
-	// seeders.SeedTickets()
+	seeders.SeedUsers()
+	seeders.SeedEvents()
+	seeders.SeedTickets()
 
 	router := gin.Default()
 	routes.UserRoutes(router, database.DB)
