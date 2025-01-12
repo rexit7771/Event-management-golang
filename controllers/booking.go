@@ -15,7 +15,7 @@ func GetAllBookings(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"result": bookings})
 }
 
-func GetAllBookingsByUserId(c *gin.Context) {
+func GetAllBookingsByOwner(c *gin.Context) {
 	userID, exists := c.Get("userID")
 	if !exists {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized, You Have to login first"})
@@ -25,6 +25,16 @@ func GetAllBookingsByUserId(c *gin.Context) {
 	var bookings []structs.Booking
 	database.DB.Table("bookings").Preload("Ticket").Preload("User").Preload("Ticket.Event").Preload("Ticket.Event.User").Where("user_id = ?", userIDUint).Find(&bookings)
 	c.JSON(http.StatusOK, gin.H{"result": bookings})
+}
+
+func GetDetailBookingByUserId(c *gin.Context) {
+	bookingId := c.Param("id")
+	var booking structs.Booking
+	if err := database.DB.Table("bookings").Preload("Ticket").Preload("User").Preload("Ticket.Event").Preload("Ticket.Event.User").First(&booking, bookingId).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": "Detail booking is not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"result": booking})
 }
 
 func AddBooking(c *gin.Context) {

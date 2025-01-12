@@ -153,14 +153,6 @@ func IsEventTicketOwnerByParam() gin.HandlerFunc {
 
 func IsBookingTicketOwner() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		bookingID := c.Param("id")
-		var booking structs.Booking
-		database.DB.Table("bookings").First(&booking, bookingID)
-		if booking.ID == 0 {
-			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "Booking Ticket is not found"})
-			return
-		}
-
 		userID, exists := c.Get("userID")
 		if !exists {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized, User ID is not found, You have to login first"})
@@ -175,6 +167,49 @@ func IsBookingTicketOwner() gin.HandlerFunc {
 		}
 
 		roleStr := role.(string)
+
+		var booking structs.Booking
+		database.DB.Table("bookings").Where("user_id = ?", userIDUint).First(&booking)
+		if booking.ID == 0 {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "Booking Ticket is not found"})
+			return
+		}
+
+		if roleStr == "admin" {
+			c.Next()
+		} else if userIDUint != booking.User_id {
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "Forbidden, You are not the owner of this Booking Ticket"})
+			return
+		}
+
+		c.Next()
+	}
+}
+
+func IsBookingTicketOwnerByParam() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		bookingId := c.Param("id")
+		userID, exists := c.Get("userID")
+		if !exists {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized, User ID is not found, You have to login first"})
+			return
+		}
+		userIDUint := userID.(uint)
+
+		role, exists := c.Get("role")
+		if !exists {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized, User Role is not found, You have to login first"})
+			return
+		}
+
+		roleStr := role.(string)
+
+		var booking structs.Booking
+		database.DB.Table("bookings").First(&booking, bookingId)
+		if booking.ID == 0 {
+			c.AbortWithStatusJSON(http.StatusNotFound, gin.H{"message": "Booking Ticket is not found"})
+			return
+		}
 
 		if roleStr == "admin" {
 			c.Next()

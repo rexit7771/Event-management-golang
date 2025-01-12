@@ -12,11 +12,12 @@ func BookingRoutes(router *gin.Engine, db *gorm.DB) {
 	bookingsGroup := router.Group("/bookings")
 	bookingsGroup.Use(middlewares.Auth())
 	{
+		bookingsGroup.GET("/:id", middlewares.IsBookingTicketOwnerByParam(), controllers.GetDetailBookingByUserId)
 		bookingsGroup.POST("/", controllers.AddBooking)
 
 		bookingsGroup.Use(middlewares.IsBookingTicketOwner())
 		{
-			bookingsGroup.GET("/", controllers.GetAllBookingsByUserId)
+			bookingsGroup.GET("/", controllers.GetAllBookingsByOwner)
 			bookingsGroup.PUT("/:id", controllers.UpdateQuantity)
 			bookingsGroup.PATCH("/:id", controllers.UpdateCancelled)
 		}
