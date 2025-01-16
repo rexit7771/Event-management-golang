@@ -84,6 +84,20 @@ func GetAllUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"result": users})
 }
 
+func GetUserByToken(c *gin.Context) {
+	userID, exists := c.Get("userID")
+	if exists == false {
+		c.JSON(http.StatusUnauthorized, gin.H{"message": "You need to login first"})
+	}
+	var user structs.User
+	err := database.DB.Table("users").First(&user, userID).Error
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"message": "User not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"result": user})
+}
+
 func GetUserById(c *gin.Context) {
 	idParam := c.Param("id")
 	var userDB structs.User
