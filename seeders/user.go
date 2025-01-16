@@ -21,7 +21,7 @@ func SeedUsers() {
 		}
 		user.Password = string(hashedPassword)
 
-		result := database.DB.Create(&user)
+		result := database.DB.FirstOrCreate(users[0])
 		if result.Error != nil {
 			log.Printf("Failed to seed user %s: %v", user.Name, result.Error)
 		} else {

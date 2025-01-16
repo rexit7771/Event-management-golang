@@ -15,7 +15,7 @@ func SeedTickets() {
 	}
 
 	for _, ticket := range tickets {
-		result := database.DB.Create(&ticket)
+		result := database.DB.FirstOrCreate(&ticket)
 		if result.Error != nil {
 			log.Printf("Failed to seed ticket %d: %v", ticket.Event_id, result.Error)
 		} else {

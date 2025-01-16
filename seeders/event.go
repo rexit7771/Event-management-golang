@@ -14,7 +14,7 @@ func SeedEvents() {
 	}
 
 	for _, event := range events {
-		result := database.DB.Create(&event)
+		result := database.DB.FirstOrCreate(&event)
 		if result.Error != nil {
 			log.Printf("Failed to seed event %s: %v", event.Title, result.Error)
 		} else {
