@@ -89,8 +89,9 @@ func GetUserByToken(c *gin.Context) {
 	if exists == false {
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "You need to login first"})
 	}
+	userIDUint := userID.(uint)
 	var user structs.User
-	err := database.DB.Table("users").First(&user, userID).Error
+	err := database.DB.Table("users").First(&user, userIDUint).Error
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": "User not found"})
 		return
