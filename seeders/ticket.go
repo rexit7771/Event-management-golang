@@ -15,7 +15,12 @@ func SeedTickets() {
 	}
 
 	for _, ticket := range tickets {
-		result := database.DB.FirstOrCreate(&ticket)
+		result := database.DB.Where(&structs.Ticket{
+			Event_id: ticket.Event_id,
+			Type:     ticket.Type,
+			Price:    ticket.Price,
+			Quantity: ticket.Quantity,
+		}).FirstOrCreate(&ticket)
 		if result.Error != nil {
 			log.Printf("Failed to seed ticket %d: %v", ticket.Event_id, result.Error)
 		} else {
