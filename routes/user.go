@@ -14,8 +14,8 @@ func UserRoutes(router *gin.Engine, db *gorm.DB) {
 	userGroup := router.Group("/users")
 	{
 		userGroup.Use(middlewares.Auth())
-		userGroup.GET("/all", middlewares.IsAdmin(), controllers.GetAllUser)
 		userGroup.GET("/", controllers.GetUserByToken)
+		userGroup.GET("/all", middlewares.IsAdmin(), controllers.GetAllUser)
 		userGroup.Use(middlewares.IsAccountOwner())
 		userGroup.GET("/:id", controllers.GetUserById)
 		userGroup.PUT("/:id", controllers.UpdateUserById)
