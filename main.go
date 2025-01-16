@@ -22,7 +22,7 @@ func main() {
 	seeders.SeedEvents()
 	seeders.SeedTickets()
 
-	router := gin.New()
+	router := gin.Default()
 	router.Use(middlewares.CORSMiddleware())
 
 	routes.UserRoutes(router, database.DB)
