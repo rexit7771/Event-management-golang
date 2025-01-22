@@ -10,6 +10,7 @@ import (
 
 func EventRoutes(router *gin.Engine, db *gorm.DB) {
 	router.GET("/events", controllers.GetAllApprovedEvents)
+	router.GET("/events/:id", controllers.GetApprovedEvent)
 	eventsGroup := router.Group("/events")
 	eventsGroup.Use(middlewares.Auth())
 	{
@@ -23,6 +24,7 @@ func EventRoutes(router *gin.Engine, db *gorm.DB) {
 		eventsGroup.Use(middlewares.IsAdmin())
 		{
 			eventsGroup.GET("/all", controllers.GetAllEvents)
+			eventsGroup.GET("/all/:id", controllers.GetEventById)
 			eventsGroup.PATCH("/:id", controllers.UpdateApproval)
 		}
 	}

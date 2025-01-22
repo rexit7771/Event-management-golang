@@ -16,11 +16,29 @@ func GetAllEvents(c *gin.Context) {
 	})
 }
 
+func GetEventById(c *gin.Context) {
+	eventID := c.Param("id")
+	var event structs.Event
+	database.DB.Table("events").Preload("User").First(&event, eventID)
+	c.JSON(http.StatusOK, gin.H{
+		"result": event,
+	})
+}
+
 func GetAllApprovedEvents(c *gin.Context) {
 	var events []structs.Event
 	database.DB.Where("approved = ?", true).Preload("User").Find(&events)
 	c.JSON(http.StatusOK, gin.H{
 		"result": events,
+	})
+}
+
+func GetApprovedEvent(c *gin.Context) {
+	eventID := c.Param("id")
+	var event structs.Event
+	database.DB.Where("approved = ?", true).Preload("User").First(&event, eventID)
+	c.JSON(http.StatusOK, gin.H{
+		"result": event,
 	})
 }
 

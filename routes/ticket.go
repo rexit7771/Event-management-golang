@@ -10,6 +10,7 @@ import (
 
 func TicketRoutes(router *gin.Engine, db *gorm.DB) {
 	router.GET("/tickets", controllers.GetAllApprovedEventsTickets)
+	router.GET("/tickets/:eventId", controllers.GetTicketsByEventParam)
 	ticketsGroup := router.Group("/tickets")
 	ticketsGroup.Use(middlewares.Auth())
 	{

@@ -28,6 +28,13 @@ func GetAllTickets(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"result": tickets})
 }
 
+func GetTicketsByEventParam(c *gin.Context) {
+	eventID := c.Param("eventId")
+	var tickets []structs.Ticket
+	database.DB.Where("event_id = ?", eventID).Preload("Event").Preload("Event.User").Find(&tickets)
+	c.JSON(http.StatusOK, gin.H{"result": tickets})
+}
+
 func AddTicket(c *gin.Context) {
 	if err = database.DB.Create(&middlewares.Ticket).Error; err != nil {
 		fmt.Println("Ini error waktu create ticket ke database")
