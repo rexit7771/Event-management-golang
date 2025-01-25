@@ -4,7 +4,6 @@ import (
 	"event-management/database"
 	"event-management/helpers"
 	"event-management/structs"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -64,7 +63,6 @@ func Login(c *gin.Context) {
 
 	result := bcrypt.CompareHashAndPassword([]byte(userDb.Password), []byte(user.Password))
 	if result != nil {
-		fmt.Println("Ini pas cek passwordnya bener engga dengan yang di hash")
 		c.JSON(http.StatusUnauthorized, gin.H{"message": "Invalid Email / Password"})
 		return
 	}
