@@ -8,10 +8,10 @@ services:
     ports:
       - "8080:8080"
     environment:
-      DB_HOST: ${PGHOST}
-      DB_PORT: ${PGPORT}
-      DB_USER: ${PGUSER}
-      DB_PASSWORD: ${PGPASSWORD}
-      DB_NAME: ${PGDATABASE}
+      PGHOST: ${PGHOST}
+      PGPORT: ${PGPORT}
+      PGUSER: ${PGUSER}
+      PGPASSWORD: ${PGPASSWORD}
+      PGDATABASE: ${PGDATABASE}
       PORT: 8080
       SECRET_KEY: ${SECRET_KEY}
