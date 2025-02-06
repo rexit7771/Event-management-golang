@@ -1,17 +1,24 @@
 package seeders
 
 import (
+	"encoding/json"
 	"event-management/database"
 	"event-management/structs"
 	"log"
+	"os"
 )
 
 func SeedTickets() {
-	tickets := []structs.Ticket{
-		{Event_id: 1, Type: "Reguler", Price: 600000, Quantity: 250},
-		{Event_id: 1, Type: "VIP", Price: 4000000, Quantity: 100},
-		{Event_id: 2, Type: "Reguler", Price: 400000, Quantity: 400},
-		{Event_id: 3, Type: "Reguler", Price: 800000, Quantity: 300},
+	jsonData, err := os.ReadFile("database/dummy/ticket.json")
+	if err != nil {
+		log.Printf("Error reading ticket.json file : %v", err)
+		return
+	}
+
+	var tickets []structs.Ticket
+	if err := json.Unmarshal(jsonData, &tickets); err != nil {
+		log.Printf("Error parsing jsonData : %v", err)
+		return
 	}
 
 	for _, ticket := range tickets {

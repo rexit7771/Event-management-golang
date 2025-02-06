@@ -10,12 +10,14 @@ import (
 )
 
 func GetAllBookings(c *gin.Context) {
+	// TODO Tambahkan Pagination dan juga search query
 	var bookings []structs.Booking
 	database.DB.Table("bookings").Preload("Ticket").Preload("User").Preload("Ticket.Event").Preload("Ticket.Event.User").Find(&bookings)
 	c.JSON(http.StatusOK, gin.H{"result": bookings})
 }
 
 func GetAllBookingsByOwner(c *gin.Context) {
+	// TODO Tambahkan Pagination dan juga search query
 	userID, exists := c.Get("userID")
 	if !exists {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized, You Have to login first"})

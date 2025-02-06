@@ -10,12 +10,12 @@ import (
 
 func TicketRoutes(router *gin.Engine, db *gorm.DB) {
 	router.GET("/tickets", controllers.GetAllApprovedEventsTickets)
-	router.GET("/tickets/:eventId", controllers.GetTicketsByEventParam)
+	router.GET("/tickets/:id", controllers.GetTicketById)
+	router.GET("/tickets/event/:eventId", controllers.GetTicketsByEventParam)
 	ticketsGroup := router.Group("/tickets")
 	ticketsGroup.Use(middlewares.Auth())
 	{
 		ticketsGroup.POST("/", middlewares.IsEventTicketOwnerByBody(), controllers.AddTicket)
-
 		ticketsGroup.Use(middlewares.IsEventTicketOwnerByParam())
 		{
 			ticketsGroup.PUT("/:id", controllers.UpdateTicket)

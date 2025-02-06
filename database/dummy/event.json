@@ -1,0 +1,272 @@
+[
+    {
+        "Title": "Linkin Park Concert",
+        "Image_url": "https://awsimages.detik.net.id/community/media/visual/2024/11/26/poster-konser-linkin-park-di-jakarta_34.jpeg?w=700&q=90",
+        "Description": "Linkin Park Concert at Jakarta, They'll gonna introduce us to their new singer",
+        "Date": "2025-02-08",
+        "Location": "Gelora Bung Karno, Jakarta, Indonesia",
+        "Created_by": 1,
+        "Approved": true
+    },
+    {
+        "Title": "Tech Conference 2025",
+        "Image_url": "https://img.evbuc.com/https%3A%2F%2Fcdn.evbuc.com%2Fimages%2F873765669%2F167645577512%2F1%2Foriginal.20241014-084309?crop=focalpoint&fit=crop&w=1000&auto=format%2Ccompress&q=75&sharp=10&fp-x=0.5&fp-y=0.5&s=39efc273e967b744b2aad0311456f8ff",
+        "Description": "Annual Tech Conference focusing on AI and Machine Learning",
+        "Date": "2025-05-15",
+        "Location": "Moscone Center, San Francisco, USA",
+        "Created_by": 2,
+        "Approved": false
+    },
+    {
+        "Title": "Art Expo 2025",
+        "Image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf9wvhnW6khbamV6ORq5B6J8hKjPRphWUMOw&s",
+        "Description": "International Art Expo showcasing modern art",
+        "Date": "2025-09-20",
+        "Location": "Louvre Museum, Paris, France",
+        "Created_by": 3,
+        "Approved": true
+    },
+    {
+        "Title": "Food Festival 2025",
+        "Image_url": "https://example.com/food-festival.jpg",
+        "Description": "A festival showcasing international cuisines",
+        "Date": "2025-03-10",
+        "Location": "Central Park, New York, USA",
+        "Created_by": 1,
+        "Approved": true
+    },
+    {
+        "Title": "Marathon 2025",
+        "Image_url": "https://example.com/marathon.jpg",
+        "Description": "Annual city marathon event",
+        "Date": "2025-04-22",
+        "Location": "Hyde Park, London, UK",
+        "Created_by": 2,
+        "Approved": false
+    },
+    {
+        "Title": "Music Festival 2025",
+        "Image_url": "https://example.com/music-festival.jpg",
+        "Description": "A festival featuring various music bands",
+        "Date": "2025-06-18",
+        "Location": "Olympic Stadium, Berlin, Germany",
+        "Created_by": 3,
+        "Approved": true
+    },
+    {
+        "Title": "Film Festival 2025",
+        "Image_url": "https://example.com/film-festival.jpg",
+        "Description": "An international film festival",
+        "Date": "2025-07-25",
+        "Location": "Cannes, France",
+        "Created_by": 1,
+        "Approved": false
+    },
+    {
+        "Title": "Book Fair 2025",
+        "Image_url": "https://example.com/book-fair.jpg",
+        "Description": "Annual book fair with authors from around the world",
+        "Date": "2025-08-12",
+        "Location": "Frankfurt, Germany",
+        "Created_by": 2,
+        "Approved": true
+    },
+    {
+        "Title": "Science Expo 2025",
+        "Image_url": "https://example.com/science-expo.jpg",
+        "Description": "Exhibition of the latest scientific discoveries",
+        "Date": "2025-10-05",
+        "Location": "Tokyo Big Sight, Tokyo, Japan",
+        "Created_by": 3,
+        "Approved": false
+    },
+    {
+        "Title": "Fashion Show 2025",
+        "Image_url": "https://example.com/fashion-show.jpg",
+        "Description": "A showcase of the latest fashion trends",
+        "Date": "2025-11-15",
+        "Location": "Milan, Italy",
+        "Created_by": 1,
+        "Approved": true
+    },
+    {
+        "Title": "Gaming Convention 2025",
+        "Image_url": "https://example.com/gaming-convention.jpg",
+        "Description": "Convention for gaming enthusiasts",
+        "Date": "2025-12-20",
+        "Location": "Los Angeles Convention Center, USA",
+        "Created_by": 2,
+        "Approved": false
+    },
+    {
+        "Title": "Startup Summit 2025",
+        "Image_url": "https://example.com/startup-summit.jpg",
+        "Description": "Summit for startups and investors",
+        "Date": "2025-01-15",
+        "Location": "Silicon Valley, USA",
+        "Created_by": 3,
+        "Approved": true
+    },
+    {
+        "Title": "Health Conference 2025",
+        "Image_url": "https://example.com/health-conference.jpg",
+        "Description": "Conference on the latest health research",
+        "Date": "2025-02-20",
+        "Location": "Geneva, Switzerland",
+        "Created_by": 1,
+        "Approved": false
+    },
+    {
+        "Title": "Robotics Expo 2025",
+        "Image_url": "https://example.com/robotics-expo.jpg",
+        "Description": "Exhibition of the latest in robotics technology",
+        "Date": "2025-03-25",
+        "Location": "Seoul, South Korea",
+        "Created_by": 2,
+        "Approved": true
+    },
+    {
+        "Title": "Automobile Show 2025",
+        "Image_url": "https://example.com/automobile-show.jpg",
+        "Description": "Showcase of the latest car models",
+        "Date": "2025-04-30",
+        "Location": "Detroit, USA",
+        "Created_by": 3,
+        "Approved": false
+    },
+    {
+        "Title": "Wine Tasting Event 2025",
+        "Image_url": "https://example.com/wine-tasting.jpg",
+        "Description": "Event for wine enthusiasts",
+        "Date": "2025-05-20",
+        "Location": "Napa Valley, USA",
+        "Created_by": 1,
+        "Approved": true
+    },
+    {
+        "Title": "Yoga Retreat 2025",
+        "Image_url": "https://example.com/yoga-retreat.jpg",
+        "Description": "A retreat focusing on yoga and wellness",
+        "Date": "2025-06-10",
+        "Location": "Bali, Indonesia",
+        "Created_by": 2,
+        "Approved": false
+    },
+    {
+        "Title": "Photography Workshop 2025",
+        "Image_url": "https://example.com/photography-workshop.jpg",
+        "Description": "Workshop for photography enthusiasts",
+        "Date": "2025-07-05",
+        "Location": "Sydney, Australia",
+        "Created_by": 3,
+        "Approved": true
+    },
+    {
+        "Title": "Culinary Arts Festival 2025",
+        "Image_url": "https://example.com/culinary-arts.jpg",
+        "Description": "Festival celebrating culinary arts",
+        "Date": "2025-08-15",
+        "Location": "Rome, Italy",
+        "Created_by": 1,
+        "Approved": false
+    },
+    {
+        "Title": "Dance Competition 2025",
+        "Image_url": "https://example.com/dance-competition.jpg",
+        "Description": "International dance competition",
+        "Date": "2025-09-25",
+        "Location": "Rio de Janeiro, Brazil",
+        "Created_by": 2,
+        "Approved": true
+    },
+    {
+        "Title": "Literature Festival 2025",
+        "Image_url": "https://example.com/literature-festival.jpg",
+        "Description": "Festival celebrating literature",
+        "Date": "2025-10-15",
+        "Location": "Edinburgh, Scotland",
+        "Created_by": 3,
+        "Approved": false
+    },
+    {
+        "Title": "Jazz Festival 2025",
+        "Image_url": "https://example.com/jazz-festival.jpg",
+        "Description": "Festival featuring jazz music",
+        "Date": "2025-11-05",
+        "Location": "New Orleans, USA",
+        "Created_by": 1,
+        "Approved": true
+    },
+    {
+        "Title": "Theater Festival 2025",
+        "Image_url": "https://example.com/theater-festival.jpg",
+        "Description": "Festival showcasing theater performances",
+        "Date": "2025-12-15",
+        "Location": "London, UK",
+        "Created_by": 2,
+        "Approved": false
+    },
+    {
+        "Title": "Comic Con 2025",
+        "Image_url": "https://example.com/comic-con.jpg",
+        "Description": "Convention for comic book fans",
+        "Date": "2025-01-25",
+        "Location": "San Diego, USA",
+        "Created_by": 3,
+        "Approved": true
+    },
+    {
+        "Title": "Astronomy Conference 2025",
+        "Image_url": "https://example.com/astronomy-conference.jpg",
+        "Description": "Conference on the latest in astronomy",
+        "Date": "2025-02-15",
+        "Location": "Cape Town, South Africa",
+        "Created_by": 1,
+        "Approved": false
+    },
+    {
+        "Title": "History Symposium 2025",
+        "Image_url": "https://example.com/history-symposium.jpg",
+        "Description": "Symposium on historical research",
+        "Date": "2025-03-05",
+        "Location": "Athens, Greece",
+        "Created_by": 2,
+        "Approved": true
+    },
+    {
+        "Title": "Architecture Expo 2025",
+        "Image_url": "https://example.com/architecture-expo.jpg",
+        "Description": "Exhibition of modern architecture",
+        "Date": "2025-04-15",
+        "Location": "Dubai, UAE",
+        "Created_by": 3,
+        "Approved": false
+    },
+    {
+        "Title": "Environmental Summit 2025",
+        "Image_url": "https://example.com/environmental-summit.jpg",
+        "Description": "Summit on environmental issues",
+        "Date": "2025-05-25",
+        "Location": "Stockholm, Sweden",
+        "Created_by": 1,
+        "Approved": true
+    },
+    {
+        "Title": "Sports Gala 2025",
+        "Image_url": "https://example.com/sports-gala.jpg",
+        "Description": "Gala event celebrating sports achievements",
+        "Date": "2025-06-15",
+        "Location": "Beijing, China",
+        "Created_by": 2,
+        "Approved": false
+    },
+    {
+        "Title": "Charity Ball 2025",
+        "Image_url": "https://example.com/charity-ball.jpg",
+        "Description": "Annual charity ball event",
+        "Date": "2025-07-25",
+        "Location": "Vienna, Austria",
+        "Created_by": 3,
+        "Approved": true
+    }
+]

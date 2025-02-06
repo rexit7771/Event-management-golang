@@ -77,6 +77,7 @@ func Login(c *gin.Context) {
 }
 
 func GetAllUser(c *gin.Context) {
+	// TODO Tambahkan Pagination dan juga search query
 	var users []structs.User
 	database.DB.Table("users").Select("id, name, email, role, created_at, updated_at").Find(&users)
 	c.JSON(http.StatusOK, gin.H{"result": users})

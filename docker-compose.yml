@@ -2,16 +2,69 @@ version: "3.8"
 
 services:
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     ports:
       - "8080:8080"
     environment:
-      PGHOST: ${PGHOST}
-      PGPORT: ${PGPORT}
-      PGUSER: ${PGUSER}
-      PGPASSWORD: ${PGPASSWORD}
-      PGDATABASE: ${PGDATABASE}
+      # ENV Railway
+      # PGHOST: ${PGHOST}
+      # PGPORT: ${PGPORT}
+      # PGUSER: ${PGUSER}
+      # PGPASSWORD: ${PGPASSWORD}
+      # PGDATABASE: ${PGDATABASE}
+      # PORT: 8080
+      # SECRET_KEY: ${SECRET_KEY}
       PORT: 8080
-      SECRET_KEY: ${SECRET_KEY}
+      SECRET_KEY: misteri
+      GIN_MODE: debug
+      # Redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+
+      # ENV Local
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: event_management
+
+    depends_on:
+      - db
+      - redis
+      # - rabbitmq
+
+  # Aktifkan jika mau docker local
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: event_management
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+  # rabbitmq:
+  #   image: rabbitmq:3-management-alpine
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #   environment:
+  #     RABBITMQ_DEFAULT_USER: guest
+  #     RABBITMQ_DEFAULT_PASS: guest
+  #   volumes:
+  #     - rabbitmq_data:/var/lib/rabbitmq
+
+volumes:
+  postgres_data:
+  redis_data:
+  # rabbitmq_data:

@@ -2,6 +2,7 @@ package main
 
 import (
 	"event-management/database"
+	"event-management/helpers"
 	"event-management/middlewares"
 	"event-management/routes"
 	"event-management/seeders"
@@ -13,10 +14,24 @@ import (
 
 func main() {
 	database.Connect()
+	database.DB.Migrator().DropTable(&structs.User{})
+	database.DB.Migrator().DropTable(&structs.Event{})
+	database.DB.Migrator().DropTable(&structs.Ticket{})
+	database.DB.Migrator().DropTable(&structs.Booking{})
 	database.DB.AutoMigrate(&structs.User{})
 	database.DB.AutoMigrate(&structs.Event{})
 	database.DB.AutoMigrate(&structs.Ticket{})
 	database.DB.AutoMigrate(&structs.Booking{})
+
+	helpers.InitRedis()
+
+	// if err := helpers.InitRabbitMQ(); err != nil {
+	// 	log.Printf("RabbitMQ initialization failed: %v", err)
+	// }
+
+	// if helpers.RabbitMQChannel != nil {
+	// 	go consumer.ConsumeEventOperations()
+	// }
 
 	seeders.SeedUsers()
 	seeders.SeedEvents()

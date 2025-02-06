@@ -4,13 +4,13 @@ import (
 	"event-management/database"
 	"event-management/middlewares"
 	"event-management/structs"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
 func GetAllApprovedEventsTickets(c *gin.Context) {
+	// TODO Tambahkan Pagination dan juga search query
 	var tickets []structs.Ticket
 	database.DB.Table("tickets").Preload("Event", "approved = ?", true).Preload("Event.User").Find(&tickets)
 	var approvedTickets []structs.Ticket
@@ -23,12 +23,20 @@ func GetAllApprovedEventsTickets(c *gin.Context) {
 }
 
 func GetAllTickets(c *gin.Context) {
+	// TODO Tambahkan Pagination dan juga search query
 	var tickets []structs.Ticket
 	database.DB.Table("tickets").Preload("Event").Preload("Event.User").Find(&tickets)
 	c.JSON(http.StatusOK, gin.H{"result": tickets})
 }
 
+func GetTicketById(c *gin.Context) {
+	ticketID := c.Param("id")
+	var ticket structs.Ticket
+	database.DB.Table("tickets").Preload("Event").Preload("Event.User").Find(&ticket, ticketID)
+}
+
 func GetTicketsByEventParam(c *gin.Context) {
+	// TODO Tambahkan Pagination dan juga search query
 	eventID := c.Param("eventId")
 	var tickets []structs.Ticket
 	database.DB.Where("event_id = ?", eventID).Preload("Event").Preload("Event.User").Find(&tickets)
@@ -37,7 +45,6 @@ func GetTicketsByEventParam(c *gin.Context) {
 
 func AddTicket(c *gin.Context) {
 	if err = database.DB.Create(&middlewares.Ticket).Error; err != nil {
-		fmt.Println("Ini error waktu create ticket ke database")
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"message": err.Error(),
 		})

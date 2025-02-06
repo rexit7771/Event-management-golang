@@ -22,16 +22,19 @@ func Connect() {
 
 	dsn := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		os.Getenv("PGHOST"),
-		os.Getenv("PGPORT"),
-		os.Getenv("PGUSER"),
-		os.Getenv("PGPASSWORD"),
-		os.Getenv("PGDATABASE"),
-		// os.Getenv("DB_HOST"),
-		// os.Getenv("DB_PORT"),
-		// os.Getenv("DB_USER"),
-		// os.Getenv("DB_PASSWORD"),
-		// os.Getenv("DB_NAME"),
+		// *Env untuk Deploy railway
+		// os.Getenv("PGHOST"),
+		// os.Getenv("PGPORT"),
+		// os.Getenv("PGUSER"),
+		// os.Getenv("PGPASSWORD"),
+		// os.Getenv("PGDATABASE"),
+
+		// * Env untuk local
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_NAME"),
 	)
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
