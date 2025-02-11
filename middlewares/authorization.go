@@ -3,6 +3,7 @@ package middlewares
 import (
 	"event-management/database"
 	"event-management/structs"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -159,6 +160,7 @@ func IsBookingTicketOwner() gin.HandlerFunc {
 			return
 		}
 		userIDUint := userID.(uint)
+		fmt.Print(userID)
 
 		role, exists := c.Get("role")
 		if !exists {

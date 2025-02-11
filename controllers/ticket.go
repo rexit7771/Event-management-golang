@@ -2,44 +2,102 @@ package controllers
 
 import (
 	"event-management/database"
+	"event-management/helpers"
 	"event-management/middlewares"
 	"event-management/structs"
+	"fmt"
+	"math"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func GetAllApprovedEventsTickets(c *gin.Context) {
-	// TODO Tambahkan Pagination dan juga search query
 	var tickets []structs.Ticket
-	database.DB.Table("tickets").Preload("Event", "approved = ?", true).Preload("Event.User").Find(&tickets)
+	query := database.DB.Model(&structs.Ticket{})
+	page, limit, offset := helpers.QueryPagination(c)
+	searchEventId, searchTicketType := helpers.QueryTicket(query, c)
+
+	cacheKey := fmt.Sprintf("tickets:page:%d:limit:%d:eventId:%d:ticket:%s", page, limit, searchEventId, searchTicketType)
+	err := helpers.CheckCache(cacheKey, c)
+	if err == nil {
+		return
+	}
+
+	var totalRows int64
+	query.Count(&totalRows)
+
+	query.
+		Preload("Event.User", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id", "name", "email")
+		}).
+		Offset(offset).
+		Limit(limit).
+		Find(&tickets)
+
 	var approvedTickets []structs.Ticket
 	for _, ticket := range tickets {
 		if ticket.Event.Approved {
 			approvedTickets = append(approvedTickets, ticket)
 		}
 	}
-	c.JSON(http.StatusOK, gin.H{"result": approvedTickets})
+
+	totalPages := int(math.Ceil(float64(totalRows) / float64(limit)))
+	pagination := helpers.PaginationFormat(page, limit, totalRows, totalPages, approvedTickets)
+	c.JSON(http.StatusOK, gin.H{"result": pagination})
 }
 
 func GetAllTickets(c *gin.Context) {
-	// TODO Tambahkan Pagination dan juga search query
 	var tickets []structs.Ticket
-	database.DB.Table("tickets").Preload("Event").Preload("Event.User").Find(&tickets)
-	c.JSON(http.StatusOK, gin.H{"result": tickets})
+	query := database.DB.Model(&structs.Ticket{})
+	page, limit, offset := helpers.QueryPagination(c)
+	searchEventId, searchTicketType := helpers.QueryTicket(query, c)
+
+	cacheKey := fmt.Sprintf("tickets:page:%d:limit:%d:eventId:%d:ticket:%s",
+		page, limit, searchEventId, searchTicketType)
+
+	err := helpers.CheckCache(cacheKey, c)
+	if err == nil {
+		return
+	}
+
+	var totalRows int64
+	query.Count(&totalRows)
+
+	query.Preload("Event").
+		Preload("Event.User", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id", "name", "email")
+		}).
+		Offset(offset).
+		Limit(limit).
+		Find(&tickets)
+
+	totalPages := int(math.Ceil(float64(totalRows) / float64(limit)))
+	pagination := helpers.PaginationFormat(page, limit, totalRows, totalPages, tickets)
+	c.JSON(http.StatusOK, gin.H{"result": pagination})
 }
 
 func GetTicketById(c *gin.Context) {
 	ticketID := c.Param("id")
 	var ticket structs.Ticket
-	database.DB.Table("tickets").Preload("Event").Preload("Event.User").Find(&ticket, ticketID)
+	database.DB.Table("tickets").
+		Preload("Event", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id", "name", "email")
+		}).
+		Preload("Event.User").Find(&ticket, ticketID)
 }
 
 func GetTicketsByEventParam(c *gin.Context) {
-	// TODO Tambahkan Pagination dan juga search query
 	eventID := c.Param("eventId")
 	var tickets []structs.Ticket
-	database.DB.Where("event_id = ?", eventID).Preload("Event").Preload("Event.User").Find(&tickets)
+	database.DB.
+		Where("event_id = ?", eventID).
+		Preload("Event").
+		Preload("Event.User", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id", "name", "email")
+		}).
+		Find(&tickets)
 	c.JSON(http.StatusOK, gin.H{"result": tickets})
 }
 

@@ -5,9 +5,7 @@ import (
 	"event-management/helpers"
 	"event-management/structs"
 	"fmt"
-	"math"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -17,9 +15,9 @@ func GetAllEvents(c *gin.Context) {
 	var events []structs.Event
 	query := database.DB.Model(&structs.Event{})
 	page, limit, offset := helpers.QueryPagination(c)
-	searchEvent, searchLocation := helpers.QuerySearch(query, c)
+	searchEvent, searchLocation := helpers.QueryEvent(query, c)
 
-	cacheKey := fmt.Sprintf("events:page:%d:limit:%d:event:%d:location:%d", page, limit, searchEvent, searchLocation)
+	cacheKey := fmt.Sprintf("events:page:%d:limit:%d:event:%s:location:%s", page, limit, searchEvent, searchLocation)
 	err := helpers.CheckCache(cacheKey, c)
 	if err == nil {
 		return
@@ -34,16 +32,10 @@ func GetAllEvents(c *gin.Context) {
 		Limit(limit).
 		Find(&events)
 
-	totalPages := int(math.Ceil(float64(totalRows) / float64(limit)))
-	pagination := structs.Pagination{
-		Page:       page,
-		Limit:      limit,
-		TotalRows:  totalRows,
-		TotalPages: totalPages,
-		Data:       events,
-	}
-	helpers.SetCache(pagination, cacheKey)
+	totalPages := helpers.CountTotalPages(totalRows, limit)
+	pagination := helpers.PaginationFormat(page, limit, totalRows, totalPages, events)
 
+	helpers.SetCache(pagination, cacheKey)
 	c.JSON(http.StatusOK, gin.H{
 		"result": pagination,
 	})
@@ -59,34 +51,29 @@ func GetEventById(c *gin.Context) {
 }
 
 func GetAllApprovedEvents(c *gin.Context) {
-	// TODO Tambahkan Pagination dan juga search query
-	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
-	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
-	offset := (page - 1) * limit
-	cachedKey := fmt.Sprintf("events:page%d:limit:%d", page, limit)
+	var events []structs.Event
+	query := database.DB.Model(&structs.Event{}).Where("approved = ?", true)
+
+	page, limit, offset := helpers.QueryPagination(c)
+	searchEvent, searchLocation := helpers.QueryEvent(query, c)
+	cachedKey := fmt.Sprintf("events:page%d:limit:%d:event:%s:location:%s", page, limit, searchEvent, searchLocation)
 
 	err := helpers.CheckCache(cachedKey, c)
 	if err == nil {
 		return
 	}
 
-	var events []structs.Event
 	var totalRows int64
-	database.DB.Model(&structs.Event{}).Count(&totalRows)
-	database.DB.Where("approved = ?", true).
-		Preload("User").
+	query.Count(&totalRows)
+	query.Preload("User", func(db *gorm.DB) *gorm.DB {
+		return db.Select("id", "name", "email")
+	}).
 		Offset(offset).
 		Limit(limit).
 		Find(&events)
 
-	totalPages := int(math.Ceil(float64(totalRows) / float64(limit)))
-	pagination := structs.Pagination{
-		Page:       page,
-		Limit:      limit,
-		TotalRows:  totalRows,
-		TotalPages: totalPages,
-		Data:       events,
-	}
+	totalPages := helpers.CountTotalPages(totalRows, limit)
+	pagination := helpers.PaginationFormat(page, limit, totalRows, totalPages, events)
 	helpers.SetCache(pagination, cachedKey)
 
 	c.JSON(http.StatusOK, gin.H{

@@ -2,37 +2,96 @@ package controllers
 
 import (
 	"event-management/database"
+	"event-management/helpers"
 	"event-management/structs"
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 func GetAllBookings(c *gin.Context) {
-	// TODO Tambahkan Pagination dan juga search query
 	var bookings []structs.Booking
-	database.DB.Table("bookings").Preload("Ticket").Preload("User").Preload("Ticket.Event").Preload("Ticket.Event.User").Find(&bookings)
-	c.JSON(http.StatusOK, gin.H{"result": bookings})
+	query := database.DB.Model(&structs.Booking{})
+	page, limit, offset := helpers.QueryPagination(c)
+	searchTicketId, searchUserId, searchCancelled := helpers.QueryBooking(query, c)
+
+	cacheKey := fmt.Sprintf("bookings:page:%d:limit:%d:ticketId:%d:userId:%d:cancelled:%s", page, limit, searchTicketId, searchUserId, searchCancelled)
+	err := helpers.CheckCache(cacheKey, c)
+	if err == nil {
+		return
+	}
+
+	var totalRows int64
+	query.Count(&totalRows)
+	query.Preload("Ticket").
+		Preload("User", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id", "name", "email")
+		}).
+		Preload("Ticket.Event").
+		Preload("Ticket.Event.User", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id", "name", "email")
+		}).
+		Offset(offset).
+		Limit(limit).
+		Find(&bookings)
+
+	totalPages := helpers.CountTotalPages(totalRows, limit)
+	pagination := helpers.PaginationFormat(page, limit, totalRows, totalPages, bookings)
+	c.JSON(http.StatusOK, gin.H{"result": pagination})
 }
 
 func GetAllBookingsByOwner(c *gin.Context) {
-	// TODO Tambahkan Pagination dan juga search query
 	userID, exists := c.Get("userID")
 	if !exists {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized, You Have to login first"})
 		return
 	}
 	userIDUint := userID.(uint)
+	fmt.Print(userID)
+
 	var bookings []structs.Booking
-	database.DB.Table("bookings").Preload("Ticket").Preload("User").Preload("Ticket.Event").Preload("Ticket.Event.User").Where("user_id = ?", userIDUint).Find(&bookings)
-	c.JSON(http.StatusOK, gin.H{"result": bookings})
+	query := database.DB.Model(&structs.Booking{})
+	page, limit, offset := helpers.QueryPagination(c)
+	searchTicketId, _, searchCancelled := helpers.QueryBooking(query, c)
+
+	cacheKey := fmt.Sprintf("bookings:page:%d:limit:%d:ticketId:%d:cancelled:%s", page, limit, searchTicketId, searchCancelled)
+	err := helpers.CheckCache(cacheKey, c)
+	if err == nil {
+		return
+	}
+
+	var totalRows int64
+	query.Count(&totalRows)
+	query.Preload("Ticket").
+		Preload("User", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id", "name", "email")
+		}).
+		Preload("Ticket.Event").
+		Preload("Ticket.Event.User", func(db *gorm.DB) *gorm.DB {
+			return db.Select("id", "name", "email")
+		}).
+		Where("user_id = ?", userIDUint).
+		Offset(offset).
+		Limit(limit).
+		Find(&bookings)
+
+	totalPages := helpers.CountTotalPages(totalRows, limit)
+	pagination := helpers.PaginationFormat(page, limit, totalRows, totalPages, bookings)
+	c.JSON(http.StatusOK, gin.H{"result": pagination})
 }
 
 func GetDetailBookingByUserId(c *gin.Context) {
 	bookingId := c.Param("id")
 	var booking structs.Booking
-	if err := database.DB.Table("bookings").Preload("Ticket").Preload("User").Preload("Ticket.Event").Preload("Ticket.Event.User").First(&booking, bookingId).Error; err != nil {
+	if err := database.DB.Table("bookings").
+		Preload("Ticket").
+		Preload("User").
+		Preload("Ticket.Event").
+		Preload("Ticket.Event.User").
+		First(&booking, bookingId).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Detail booking is not found"})
 		return
 	}

@@ -4,6 +4,8 @@ import (
 	"event-management/database"
 	"event-management/helpers"
 	"event-management/structs"
+	"fmt"
+	"math"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -77,10 +79,29 @@ func Login(c *gin.Context) {
 }
 
 func GetAllUser(c *gin.Context) {
-	// TODO Tambahkan Pagination dan juga search query
 	var users []structs.User
-	database.DB.Table("users").Select("id, name, email, role, created_at, updated_at").Find(&users)
-	c.JSON(http.StatusOK, gin.H{"result": users})
+	query := database.DB.Model(&structs.User{})
+	searchName, searchEmail := helpers.QueryUser(query, c)
+
+	page, limit, offset := helpers.QueryPagination(c)
+	cacheKey := fmt.Sprintf("users:page:%d:limit:%d:name:%s:email:%s", page, limit, searchName, searchEmail)
+	err := helpers.CheckCache(cacheKey, c)
+	if err == nil {
+		return
+	}
+
+	var totalRows int64
+	query.Count(&totalRows)
+
+	query.Select("id, name, email, role").
+		Offset(offset).
+		Limit(limit).
+		Find(&users)
+
+	totalPages := int(math.Ceil(float64(totalRows) / float64(limit)))
+	pagination := helpers.PaginationFormat(page, limit, totalRows, totalPages, users)
+
+	c.JSON(http.StatusOK, gin.H{"result": pagination})
 }
 
 func GetUserByToken(c *gin.Context) {
